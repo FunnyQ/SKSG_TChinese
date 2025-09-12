@@ -4,7 +4,7 @@
 
 遊戲更新後請嘗試重新執行一次此工具。
 
-![image](https://github.com/tents89/SKSO_TChinese/blob/main/Tool.png)
+![image](resources/icons/Tool.png)
 > **本工具的核心邏輯與程式碼均由 AI 構建，並使用 Python 與 UnityPy 技術實現。**
 
 ---
@@ -48,6 +48,42 @@
 
 ---
 
+## 👨‍💻 開發者資訊
+
+如果你想從原始碼執行或進行開發：
+
+### 執行新版本 (推薦)
+```bash
+# 安裝依賴 (包含開發工具)
+uv pip install -r requirements.txt
+uv pip install -e ".[dev]"
+
+# 執行新的模組化版本
+uv run python -m src.main
+# 或使用專用啟動器
+uv run python run_new.py
+```
+
+### 執行原始版本 (向後相容)
+```bash
+# 安裝基本依賴
+uv pip install -r requirements.txt
+
+# 執行原始單檔版本 (須在遊戲根目錄)
+python sk_cht.py
+```
+
+### 測試
+```bash
+# 執行完整測試套件 (43 個測試案例)
+uv run pytest tests/ -v
+
+# 執行測試並產生覆蓋率報告
+uv run pytest tests/ --cov=src --cov-report=term-missing
+```
+
+---
+
 ## ⚠️ 注意
 
 * 本工具會直接修改遊戲檔案，雖然內建備份功能，但如果失效請在Steam重新驗證檔案完整性。
@@ -60,5 +96,7 @@
 
 * **主要語言**: Python 3.12
 * **核心函式庫**: UnityPy (用於處理 Unity 遊戲資產)
+* **依賴管理**: uv + pyproject.toml
+* **測試框架**: pytest (43+ 測試案例)
 * **打包工具**: PyInstaller
 

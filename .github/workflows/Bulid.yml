@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: '要發布的版本號 (例如 v1.0.1)'
+        description: "要發布的版本號 (例如 v1.0.1)"
         required: true
-        default: 'v1.0.0'
+        default: "v1.0.0"
 
 jobs:
   build:
@@ -26,26 +26,36 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+          cache: "pip"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
+          uv pip install -r requirements.txt
+          uv pip install -e ".[dev]"
+
+      - name: Run tests
+        run: |
+          uv run pytest tests/ -v
 
       - name: Build on Windows
         if: runner.os == 'Windows'
         run: |
-          pyinstaller --onefile --icon=sk.ico --add-data "CHT;CHT" --collect-all UnityPy --collect-all TypeTreeGeneratorAPI --collect-all archspec --name="SilkSong_CHT_win" sk_cht.py
-      
+          pyinstaller --onefile --icon=resources/icons/sk.ico --add-data "CHT;CHT" --add-data "src;src" --collect-all UnityPy --collect-all TypeTreeGeneratorAPI --collect-all archspec --name="SilkSong_CHT_win" src/main.py
+
       - name: Build on macOS
         if: runner.os == 'macOS'
         run: |
-          pyinstaller --onefile --icon=sk.icns --add-data "CHT:CHT" --collect-all UnityPy --collect-all TypeTreeGeneratorAPI --collect-all archspec --name="SilkSong_CHT_mac" sk_cht.py
+          pyinstaller --onefile --icon=resources/icons/sk.icns --add-data "CHT:CHT" --add-data "src:src" --collect-all UnityPy --collect-all TypeTreeGeneratorAPI --collect-all archspec --name="SilkSong_CHT_mac" src/main.py
 
       - name: Build on Linux
         if: runner.os == 'Linux'
         run: |
-          pyinstaller --onefile --icon=sk.png --add-data "CHT:CHT" --collect-all UnityPy --collect-all TypeTreeGeneratorAPI --collect-all archspec --name="SilkSong_CHT_linux" sk_cht.py
+          pyinstaller --onefile --icon=resources/icons/sk.png --add-data "CHT:CHT" --add-data "src:src" --collect-all UnityPy --collect-all TypeTreeGeneratorAPI --collect-all archspec --name="SilkSong_CHT_linux" src/main.py
 
       - name: Archive and Upload Artifact
         uses: actions/upload-artifact@v4
@@ -86,5 +96,3 @@ jobs:
             dist/SilkSong_CHT-Windows.zip
             dist/SilkSong_CHT-macOS.zip
             dist/SilkSong_CHT-Linux.zip
-
-
