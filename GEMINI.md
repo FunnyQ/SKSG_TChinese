@@ -26,7 +26,7 @@ The project's dependencies are listed in `requirements.txt`:
 
 1.  Install the required dependencies:
     ```bash
-    pip install -r requirements.txt
+    uv pip install -r requirements.txt
     ```
 2.  Place the script in the root directory of the "Hollow Knight: Silksong" game.
 3.  Run the script:
